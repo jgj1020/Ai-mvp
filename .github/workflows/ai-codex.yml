@@ -1,0 +1,40 @@
+name: FORGE5 optional Codex AI proposals
+on:
+  schedule:
+    - cron: '37 0 * * *' # 09:37 KST, weekends included
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proposal:
+    if: vars.FORGE5_AI_AUTODEV_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify baseline
+        run: npm run check
+      - name: Generate scoped code proposal
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          permission-profile: ':workspace'
+          prompt-file: scripts/autodev/prompt.md
+      - name: Verify proposal before any external publication
+        run: |
+          git add -N .
+          git diff --check
+          npm run check
+      - name: Save review patch (no branch write/merge)
+        if: success()
+        run: git diff --binary HEAD > /tmp/forge5-ai-proposal.patch
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: forge5-ai-review-patch
+          path: /tmp/forge5-ai-proposal.patch
+          retention-days: 3
