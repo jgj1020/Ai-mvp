@@ -1,0 +1,25 @@
+{
+  "project": "FORGE5",
+  "timezone": "Asia/Seoul",
+  "cadence": "09:17 KST daily including weekends",
+  "start": "2026-11-21",
+  "end": "2026-11-23",
+  "mode": "deterministic feature generation, review only",
+  "tasks": [
+    {
+      "date": "2026-11-21",
+      "name": "숫자 기억력 게임",
+      "owner": "코드 · 루나"
+    },
+    {
+      "date": "2026-11-22",
+      "name": "숫자 맞히기 게임",
+      "owner": "코드 · 노바"
+    },
+    {
+      "date": "2026-11-23",
+      "name": "가위바위보 게임",
+      "owner": "코드 · 쉴드"
+    }
+  ]
+}
