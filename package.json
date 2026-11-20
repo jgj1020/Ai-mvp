@@ -1,0 +1,14 @@
+{
+  "name": "forge5-ai-mvp",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "FORGE5 eight-role virtual studio and playable games",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run test && npm run build",
+    "autodev:run": "node scripts/autodev/generate.mjs"
+  }
+}
