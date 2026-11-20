@@ -1,0 +1,50 @@
+name: FORGE5 scheduled development
+on:
+  schedule:
+    - cron: '17 0 * * *'  # 09:17 Asia/Seoul, weekends included
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: forge5-scheduled-development
+  cancel-in-progress: false
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify current MVP
+        run: npm run check
+      - name: Generate ONE preapproved game feature for today
+        run: |
+          node scripts/autodev/generate.mjs
+          npm run check
+      - name: Send generated code for review (NO auto merge)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo 'No changes in approved date window'
+            exit 0
+          fi
+          date_kst=$(TZ=Asia/Seoul date +%F)
+          branch="automation/forge5-$date_kst"
+          if git ls-remote --heads origin "$branch" | grep -q "refs/heads/$branch"; then
+            echo "Already proposed $branch; skipping duplicates"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -c "$branch"
+          git add apps/web/index.html apps/web/arcade/
+          git diff --cached --check
+          git commit -m "feat: propose scheduled FORGE5 arcade update $date_kst"
+          git push origin "$branch"
+          gh pr create --draft --base main --head "$branch" --title "[FORGE5] $date_kst 자동 개발 제안" --body "사전 승인된 기능 생성 스크립트로 작성된 게임 코드입니다. npm run check 결과 확인 후 대표 검토가 필요합니다. 자동 병합/배포하지 않습니다." || echo 'Draft PR creation unavailable (check Actions PR permissions); review branch preserved.'
