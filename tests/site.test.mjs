@@ -5,7 +5,7 @@ const html=fs.readFileSync('apps/web/index.html','utf8');
 const game=fs.readFileSync('apps/web/game.html','utf8');
 const js=fs.readFileSync('apps/web/game.js','utf8');
 test('Eight virtual roles are visible',()=>{for(const name of ['아틀라스','루나','코드','모아','하루','리오','노바','쉴드'])assert.ok(html.includes(name),name)});
-test('Arcade game is linked',()=>assert.ok(html.includes('/game.html')));
+test('Arcade game is linked',()=>assert.ok(html.includes('href="game.html"')));
 test('Game is five rounds',()=>assert.ok(js.includes('MAX_ROUNDS = 5')));
 test('Gameplay handles false start',()=>assert.ok(js.includes('1000')));
 test('Game supports accessible status',()=>assert.ok(game.includes('aria-live="polite"')));
