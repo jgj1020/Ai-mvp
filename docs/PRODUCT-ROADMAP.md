@@ -49,3 +49,13 @@
 - [FORGE5 소스 저장소](https://github.com/jgj1020/Ai-mvp)
 - [기본 CI 성공](https://github.com/jgj1020/Ai-mvp/actions/runs/44732949104)
 - 2026-11-20 현재 GitHub 예약 개발 스케줄 정의만 완료. 11/21 실제 자동 실행·PR은 아직 확인 전.
+
+## 2026-11-20 · 회사 소개 페이지 레이아웃 재설계 (디자인 브랜치)
+
+- **대상:** `apps/web/index.html`, `apps/web/styles.css`, `tests/site.test.mjs`.
+- **반영:** 분할형 히어로/게임 시각 미리보기, 3가지 서비스 영역, 비대칭 프로젝트 보드, 4단계 작업 프로세스, 8개 가상 AI 역할을 3개 업무 그룹으로 재배치.
+- **디자인 원칙:** 다크 네이비/라임 포인트, 긴 소개 문장 축소, 메인 CTA 및 실제 실행 가능 게임 강조, 상태(PLAYABLE/PLANNED) 명시, 모바일 레이아웃과 키보드 포커스 고려.
+- **호환성:** 기존 `game.html`/`game.js` 유지. 게임 자동 생성기의 `<!-- GENERATED_GAME_LINKS -->` 삽입 지점 보존.
+- **확인 근거:** [작업 브랜치](https://github.com/jgj1020/Ai-mvp/tree/design/forge5-home-layout-20261120) 및 정적 확인 15/15 통과. 기존 테스트와 레이아웃 회귀 검증 코드 추가.
+- **미확인:** 실제 브라우저 시각 검수, `npm run check` 실제 실행, CI, 운영 Higgsfield 사이트 반영. 별도 PR 생성이나 `main` 병합 전.
+- **다음 작업:** 360/390/768/1280px에서 실제 화면 및 접근성 검수 → 테스트/빌드 실행 → 대표 검토 뒤 PR/배포.
