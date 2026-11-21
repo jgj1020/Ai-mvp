@@ -1,0 +1,33 @@
+name: FORGE5 recurring studio audit
+on:
+  schedule:
+    - cron: '27 1,7,13,19 * * *' # 04:27, 10:27, 16:27, 22:27 Asia/Seoul
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: forge5-ops-readonly-audit
+  cancel-in-progress: false
+jobs:
+  check-studio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify baseline code and build
+        run: npm run check
+      - name: Atlas-Luna-Code read-only audit
+        run: node scripts/ops/audit.mjs
+        env:
+          FORGE5_LIVE_CHECK: 'true'
+      - name: Save audit report for human review
+        uses: actions/upload-artifact@v4
+        with:
+          name: forge5-readonly-audit
+          path: artifacts/ops/audit.*
+          retention-days: 7
